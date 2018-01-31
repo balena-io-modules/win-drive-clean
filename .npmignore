@@ -1,0 +1,11 @@
+.*
+*.md
+*.log
+
+benchmark
+build
+doc
+example
+prebuild
+prebuilds
+test
