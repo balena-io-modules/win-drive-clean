@@ -17,6 +17,7 @@
 #include <nan.h>
 #include <windows.h>
 #include <winioctl.h>
+#include <string>
 #include "drive-clean.hpp"
 
 using v8::String;
@@ -42,7 +43,7 @@ class AsyncWorker : public Nan::AsyncWorker {
       devicePath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ,
       NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
-    if(hDevice == INVALID_HANDLE_VALUE) {
+    if (hDevice == INVALID_HANDLE_VALUE) {
       errorCode = GetLastError();
       sysCall = "CreateFile";
       SetErrorMessage("Couldn't open handle to device");
@@ -85,7 +86,7 @@ class AsyncWorker : public Nan::AsyncWorker {
   DWORD errorCode;
 };
 
-}
+}  // namespace DriveClean
 
 NAN_METHOD(clean) {
   if (!info[0]->IsString()) {

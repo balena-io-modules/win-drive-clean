@@ -1,4 +1,4 @@
-var driveClean = require( '..' )
+var driveClean = require('..')
 var argv = process.argv.slice(2)
 var drive = argv.shift()
 
