@@ -13,6 +13,7 @@
   "main": "lib/clean.js",
   "scripts": {
     "test": "mocha",
+    "lint": "standard && cpplint",
     "install": "node-gyp rebuild",
     "rebuild": "node-gyp rebuild",
     "clean": "node-gyp clean"
@@ -22,7 +23,8 @@
     "nan": "^2.8.0"
   },
   "devDependencies": {
-    "mocha": "^5.0.0"
+    "mocha": "^5.0.0",
+    "standard": "^10.0.3"
   },
   "peerDependencies": {},
   "optionalDependencies": {},
