@@ -13,7 +13,7 @@
   "main": "lib/clean.js",
   "scripts": {
     "test": "mocha",
-    "lint": "standard && cpplint",
+    "lint": "standard lib && standard --env mocha test && cpplint --recursive src",
     "install": "node-gyp rebuild",
     "rebuild": "node-gyp rebuild",
     "clean": "node-gyp clean"
