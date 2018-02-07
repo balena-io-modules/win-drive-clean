@@ -1,0 +1,36 @@
+# appveyor file
+# http://www.appveyor.com/docs/appveyor-yml
+image:
+  - Visual Studio 2015
+
+init:
+  - git config --global core.autocrlf input
+
+environment:
+  matrix:
+    - nodejs_version: 8
+    - nodejs_version: 6
+    - nodejs_version: 4
+
+platform:
+  - x86
+  - x64
+
+matrix:
+  fast_finish: true
+
+install:
+  - ps: Update-NodeJsInstallation $env:nodejs_version $env:Platform
+  - pip install -r requirements.txt
+  - npm install
+
+build: off
+
+test_script:
+  - node --version
+  - npm --version
+  - npm test
+  - npm run lint
+
+deploy_script:
+  - scripts\prebuild-publish.bat
