@@ -14,16 +14,19 @@
   "scripts": {
     "test": "mocha",
     "lint": "standard lib && standard --env mocha test && cpplint --recursive src",
-    "install": "node-gyp rebuild",
+    "install": "prebuild-install || node-gyp rebuild",
     "rebuild": "node-gyp rebuild",
-    "clean": "node-gyp clean"
+    "clean": "node-gyp clean",
+    "prebuild-release": "prebuild --all --strip"
   },
   "dependencies": {
     "bindings": "^1.3.0",
-    "nan": "^2.8.0"
+    "nan": "^2.8.0",
+    "prebuild-install": "^2.5.0"
   },
   "devDependencies": {
     "mocha": "^5.0.0",
+    "prebuild": "^7.4.0",
     "standard": "^10.0.3"
   },
   "peerDependencies": {},
