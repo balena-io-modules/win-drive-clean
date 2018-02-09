@@ -14,3 +14,17 @@ Remove a disks partition table on Windows
 ```sh
 $ npm install --save win-drive-clean
 ```
+
+## Usage
+
+```js
+const driveClean = require('win-drive-clean')
+```
+
+**NOTE:** As this is Windows only, calling `driveClean()` on other platforms will be a NOOP and always succeed.
+
+```js
+driveClean('\\\\.\\PhysicalDrive5', (error) => {
+  // ...
+})
+```
