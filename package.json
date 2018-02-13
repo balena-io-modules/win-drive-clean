@@ -1,6 +1,6 @@
 {
   "name": "win-drive-clean",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Remove a disks partition table on Windows",
   "license": "MIT",
   "author": "Jonas Hermsmeier <jhermsmeier@gmail.com> (https://jhermsmeier.de)",
