@@ -58,7 +58,10 @@ class AsyncWorker : public Nan::AsyncWorker {
       errorCode = GetLastError();
       sysCall = "IOCTL_DISK_DELETE_DRIVE_LAYOUT";
       SetErrorMessage("Couldn't delete drive layout");
-      return;
+    }
+
+    if (hDevice != INVALID_HANDLE_VALUE) {
+      CloseHandle(hDevice);
     }
   }
 
