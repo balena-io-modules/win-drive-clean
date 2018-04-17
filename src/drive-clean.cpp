@@ -50,6 +50,24 @@ class AsyncWorker : public Nan::AsyncWorker {
       return;
     }
 
+    // Overwrite the MBR with empty partitions to ensure
+    // that it's "Unallocated", should the missing MBR signature be ignored
+    DRIVE_LAYOUT_INFORMATION_EX layout;
+
+    ZeroMemory(&layout, sizeof(DRIVE_LAYOUT_INFORMATION_EX));
+
+    BOOL emptied = DeviceIoControl(
+      hDevice, IOCTL_DISK_SET_DRIVE_LAYOUT_EX,
+      &layout, sizeof(DRIVE_LAYOUT_INFORMATION_EX),
+      NULL, 0, &size, NULL);
+
+    if (!emptied) {
+      errorCode = GetLastError();
+      sysCall = "IOCTL_DISK_SET_DRIVE_LAYOUT_EX";
+      SetErrorMessage("Couldn't set drive layout");
+    }
+
+    // Remove disk layout (this pretty much only removes the MBR signature)
     BOOL layoutRemoved = DeviceIoControl(
       hDevice, IOCTL_DISK_DELETE_DRIVE_LAYOUT,
       NULL, 0, NULL, 0, &size, NULL);
