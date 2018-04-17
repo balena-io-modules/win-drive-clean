@@ -60,6 +60,17 @@ class AsyncWorker : public Nan::AsyncWorker {
       SetErrorMessage("Couldn't delete drive layout");
     }
 
+    // Invalidate the cached partition table and re-enumerate the device
+    BOOL updated = DeviceIoControl(
+      hDevice, IOCTL_DISK_UPDATE_PROPERTIES,
+      NULL, 0, NULL, 0, &size, NULL);
+
+    if (!updated) {
+      errorCode = GetLastError();
+      sysCall = "IOCTL_DISK_UPDATE_PROPERTIES";
+      SetErrorMessage("Couldn't flush drive changes");
+    }
+
     if (hDevice != INVALID_HANDLE_VALUE) {
       CloseHandle(hDevice);
     }
