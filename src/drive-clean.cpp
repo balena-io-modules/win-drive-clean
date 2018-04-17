@@ -50,6 +50,21 @@ class AsyncWorker : public Nan::AsyncWorker {
       return;
     }
 
+    // TODO: Looks like FSCTL only have an effect for mountpoints (i.e. F:\)
+    // but iterating over mountpoints and locking them doesn't seem to make
+    // sense as the lock will be held by the mountpoint handle, while dismounting
+    // them could make sense, but then volumes may be mounted again by any process
+    // once the lock seizes to hold, which happens when the handle holding the lock is closed
+    BOOL locked = DeviceIoControl(
+      hDevice, FSCTL_LOCK_VOLUME,
+      NULL, 0, NULL, 0, &size, NULL);
+
+    if (!locked) {
+      errorCode = GetLastError();
+      sysCall = "FSCTL_LOCK_VOLUME";
+      SetErrorMessage("Couldn't lock device");
+    }
+
     BOOL layoutRemoved = DeviceIoControl(
       hDevice, IOCTL_DISK_DELETE_DRIVE_LAYOUT,
       NULL, 0, NULL, 0, &size, NULL);
@@ -58,6 +73,26 @@ class AsyncWorker : public Nan::AsyncWorker {
       errorCode = GetLastError();
       sysCall = "IOCTL_DISK_DELETE_DRIVE_LAYOUT";
       SetErrorMessage("Couldn't delete drive layout");
+    }
+
+    BOOL unmounted = DeviceIoControl(
+      hDevice, FSCTL_DISMOUNT_VOLUME,
+      NULL, 0, NULL, 0, &size, NULL);
+
+    if (!unmounted) {
+      errorCode = GetLastError();
+      sysCall = "FSCTL_DISMOUNT_VOLUME";
+      SetErrorMessage("Couldn't dismount device");
+    }
+
+    BOOL unlocked = DeviceIoControl(
+      hDevice, FSCTL_UNLOCK_VOLUME,
+      NULL, 0, NULL, 0, &size, NULL);
+
+    if (!unlocked) {
+      errorCode = GetLastError();
+      sysCall = "FSCTL_UNLOCK_VOLUME";
+      SetErrorMessage("Couldn't unlock device");
     }
 
     if (hDevice != INVALID_HANDLE_VALUE) {
